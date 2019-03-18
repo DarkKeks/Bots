@@ -18,8 +18,11 @@ class Worker:
     def update(self):
         logger.info('Performing update')
         groups = VkGroup.objects.all()
+
+        post_count = 0
         for group in groups:
-            self.update_group(group)
+            post_count += self.update_group(group)
+        return post_count
 
     def update_group(self, group):
         logger.info('Updating group %s', group.telegram_username)
@@ -34,10 +37,12 @@ class Worker:
             logger.info('Processing post with id %s', post['id'])
             try:
                 self.process_post(post, group)
-            except Exception as err:
+            except Exception:
                 logger.exception(f"Exception occurred while processing post from "
-                                 f"{group.telegram_username} - id {post['id']}", err)
+                                 f"{group.telegram_username} - id {post['id']}")
             time.sleep(3)
+
+        return len(posts)
 
     def process_post(self, post, group):
         chat_id = group.telegram_username
