@@ -112,7 +112,7 @@ class Worker:
                 send_encoded(gif, bot.send_animation, bot.send_message)
 
         for audio, caption in audios:
-            bot.send_audio(chat_id, audio, caption=caption)
+            bot.send_audio(chat_id, audio, caption=caption, timeout=228)
 
     def get_biggest_photo_size(self, photo):
         sizes = sorted(photo['sizes'], key=lambda x: x['width'] * x['height'])
